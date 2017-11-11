@@ -40,6 +40,7 @@ REQUIRED_USE="
 COMMON="
 	app-eselect/eselect-opencl
 	kernel_linux? ( >=sys-libs/glibc-2.6.1 )
+	sys-devel/prelink
 	tools? (
 		dev-libs/atk
 		dev-libs/glib:2
@@ -453,14 +454,14 @@ src_install-libs() {
 	if use X; then
 		NV_GLX_LIBRARIES=(
 			"libEGL.so.$(usex compat ${NV_SOVER} 1) ${GL_ROOT}"
-			"libEGL_nvidia.so.${NV_SOVER}"
+			"libEGL_nvidia.so.${NV_SOVER} ${GL_ROOT}"
 			"libGL.so.$(usex compat ${NV_SOVER} 1.0.0) ${GL_ROOT}"
 			"libGLESv1_CM.so.1 ${GL_ROOT}"
-			"libGLESv1_CM_nvidia.so.${NV_SOVER}"
+			"libGLESv1_CM_nvidia.so.${NV_SOVER} ${GL_ROOT}"
 			"libGLESv2.so.2 ${GL_ROOT}"
-			"libGLESv2_nvidia.so.${NV_SOVER}"
+			"libGLESv2_nvidia.so.${NV_SOVER} ${GL_ROOT}"
 			"libGLX.so.0 ${GL_ROOT}"
-			"libGLX_nvidia.so.${NV_SOVER}"
+			"libGLX_nvidia.so.${NV_SOVER} ${GL_ROOT}"
 			"libGLdispatch.so.0 ${GL_ROOT}"
 			"libOpenCL.so.1.0.0 ${CL_ROOT}"
 			"libOpenGL.so.0 ${GL_ROOT}"
@@ -513,7 +514,7 @@ src_install-libs() {
 		# symlink libGLX_vendor for system gl-dispatcher
 		local glvnd_ROOT=/usr/$(get_libdir)/opengl/glvnd
 		dodir "${glvnd_ROOT}"/lib
-		for x in "${nv_DEST}"/lib*_nvidia.so* ; do
+		for x in "${GL_ROOT}"/lib*_nvidia.so* ; do
 			dosym "${x}" "${glvnd_ROOT}"/lib/"${x##*/}"
 		done
 
